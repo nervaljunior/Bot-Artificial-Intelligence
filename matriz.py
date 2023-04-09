@@ -1,5 +1,7 @@
 import random
-
+from main import *
+from lixeira import *
+point=0
 def gerar_ambiente():
     # Cria uma matriz 20x20 preenchida com zeros
     matriz = [["_" for i in range(20)] for j in range(20)]
@@ -37,10 +39,23 @@ def imprime(matriz):
     for i in range(20):
         for j in range(20):
             print(matriz[i][j], end=" ")
-        print() 
+        print()
+    print()
+    print()
+    point=pontuacao()
+    print(f'pontuação: {point}') 
  
-        
-    
+def verifica_matriz(matriz):
+    for i in range(20):
+        for j in range(20):
+            if matriz[i][j] == "R" or matriz[i][j] == "O":
+                return True
+    return False   
+
+
+
+
+
         
 
 

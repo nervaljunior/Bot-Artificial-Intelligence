@@ -1,0 +1,4 @@
+depois fazer as percepções dos 8 locais vizinhos se tiver algum lixo ao redor ele entra em um loop e pega o lixo, depois que pegar leva ao lixo
+
+quando ele estiver indo para o lixo ele pode ir para cima caso esteja com varios lixos bloqueando sua passagem
+alem disso ele nao pode andar na diagonal 

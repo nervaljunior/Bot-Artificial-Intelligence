@@ -1,27 +1,69 @@
 import random
+import time
+from os import system
+from lixeira import *
+from main import *
 
-def robocop(matriz):
+def react_simples(matriz):
     # Encontra a posição atual do robô
+    posicao_lixo=(19,19)
     posicao_atual = None
     for i in range(20):
         for j in range(20):
             if matriz[i][j] =="A":
                 posicao_atual = (i, j)
                 break
+                
     i,j=posicao_atual
+    percept(i,j,matriz)
     i_novo,j_novo=direca(i,j)
     i+=i_novo
     j+=j_novo
     
     # Move o robô para a nova posição
-    matriz[posicao_atual[0]][posicao_atual[1]] = "_"
-    matriz[i][j] = "A"
-    return matriz
-import random
+    if(posicao_atual==posicao_lixo):
+        matriz[posicao_atual[0]][posicao_atual[1]] = "X"
+        matriz[i][j] = "A"
+        return matriz
+    if(matriz[i][j]=="R" or matriz[i][j]=="O"):  # Correção aqui
+        if matriz[i][j]=='R':
+            lixo='reciclável'
+            print(f'levando lixo {lixo} para lixeira')
+            matriz[i][j] = "_"
+            levar_lixo(lixo,posicao_atual,matriz)
+        elif matriz[i][j]=='O':
+            lixo='orgânico'
+            print(f'levando lixo {lixo} para lixeira')
+            matriz[i][j] = "_"
+            levar_lixo(lixo,posicao_atual,matriz)
+        matriz[posicao_atual[0]][posicao_atual[1]] = "_"
+        matriz[19][18] = "A"
+    else:
+        matriz[posicao_atual[0]][posicao_atual[1]] = "_"
+        matriz[i][j] = "A"
+        return matriz
+
+    
+def percept(x, y, matriz):
+# Lista para armazenar as percepções do robô
+    percepcoes = []
+
+    # Verifica as 8 células ao redor do robô
+    for i in range(x-1, x+2):
+        for j in range(y-1, y+2):
+            # Verifica se a célula está dentro dos limites da matriz
+            if 0 <= i < 20 and 0 <= j < 20:
+                # Verifica se há lixo na célula
+                if matriz[i][j] in ['R', 'O']:
+                    # Adiciona a percepção à lista
+                    percepcoes.append(matriz[i][j])
+
+    return percepcoes
 
 def direca(x, y):
     # Verifica as direções possíveis, levando em consideração a posição do robô na matriz
     possiveis_direcoes = []
+    #percept()
     if x > 0:  # pode mover para cima
         possiveis_direcoes.append((-1, 0))
     if x < 19:  # pode mover para baixo
@@ -39,78 +81,62 @@ def direca(x, y):
     direcao = random.choice(possiveis_direcoes)
     return direcao
 
+
+def levar_lixo(tipo_lixo, posicao_atual, matriz):
     
-def coletar_lixo(self, tipo_lixo):
-        if self.lixo is None:
-            if self.ambiente[self.posicao[0]-1][self.posicao[1]-1][tipo_lixo] > 0:
-                self.lixo = tipo_lixo
-                return True
-        return False
-    
-def pegar_lixo():
-    '''x, y = posicao_robo[0], posicao_robo[1]
-    if matriz[x][y] != 0:
-        return matriz[x][y]'''
-        
-def soltar_lixo():
-    '''x, y = posicao_robo[0], posicao_robo[1]
-    if matriz[x][y] == 0:
-        matriz[x][y] = " "
-        return True'''
-def voltar_lixeira(self):
-        if self.lixo is not None:
-            if self.posicao == self.lixeira.posicao:
-                self.largar_lixo()
-                return True
+    # Observe a posição atual e vá até a posição (19, 19) da matriz
+    pos_x_atual, pos_y_atual = posicao_atual
+    pos_x_lixo, pos_y_lixo = 19, 19  # Posição do lixo (19, 19) da matriz
+    tamanho_matriz = len(matriz)
+
+    while pos_x_atual != pos_x_lixo or pos_y_atual != pos_y_lixo:
+        # Move o robô na direção x se ainda não estiver na posição correta
+        if pos_x_atual != pos_x_lixo:
+            if pos_x_atual < pos_x_lixo:
+                pos_x_proximo = min(pos_x_atual + 1, tamanho_matriz - 1)  # Verifica limite superior da matriz
+                if matriz[pos_x_proximo][pos_y_atual] != "R" and matriz[pos_x_proximo][pos_y_atual] != "O":
+                    pos_x_atual = pos_x_proximo
             else:
-                caminho = self.caminho_livre(self.lixeira.posicao)
-                if caminho:
-                    self.andar(caminho[0])
-                    return True
-        return False
+                pos_x_proximo = max(pos_x_atual - 1, 0)  # Verifica limite inferior da matriz
+                if matriz[pos_x_proximo][pos_y_atual] != "R" and matriz[pos_x_proximo][pos_y_atual] != "O":
+                    pos_x_atual = pos_x_proximo
+        
+        # Move o robô na direção y se ainda não estiver na posição correta
+        if pos_y_atual != pos_y_lixo:
+            if pos_y_atual < pos_y_lixo:
+                pos_y_proximo = min(pos_y_atual + 1, tamanho_matriz - 1)  # Verifica limite superior da matriz
+                if matriz[pos_x_atual][pos_y_proximo] != "R" and matriz[pos_x_atual][pos_y_proximo] != "O":
+                    pos_y_atual = pos_y_proximo
+            else:
+                pos_y_proximo = max(pos_y_atual - 1, 0)  # Verifica limite inferior da matriz
+                if matriz[pos_x_atual][pos_y_proximo] != "R" and matriz[pos_x_atual][pos_y_proximo] != "O":
+                    pos_y_atual = pos_y_proximo
 
-def caminho_livre(self, destino):
-    fila = [[self.posicao]]
-    visitados = set()
-    while fila:
-        caminho = fila.pop(0)
-        posicao_atual = caminho[-1]
-        if posicao_atual == destino:
-            return caminho[1:]
-        elif posicao_atual not in visitados:
-            for direcao in self.movimentos:
-                nova_pos = self.proxima_posicao(posicao_atual, direcao)
-                if nova_pos and self.ambiente[nova_pos[0]-1][nova_pos[1]-1]['vazio']:
-                    nova_caminho = list(caminho)
-                    nova_caminho.append(direcao)
-                    fila.append(nova_caminho)
-            visitados.add(posicao_atual)
-    return None 
- 
-def run(self, num_iteracoes):
-        # Executa o ambiente por um determinado número de iterações
-        for i in range(num_iteracoes):
-            # Imprime o ambiente e a pontuação atual
-            print(f"\nIteração {i+1}:")
-            self.imprimir_ambiente()
-            print(f"Pontuação: {self.robo.pontuacao}")
-            
-            # Verifica se o robô está com lixo e tenta levá-lo para a lixeira
-            if self.robo.lixo is not None:
-                self.robo.voltar_lixeira()
-            
-            # Coleta lixo da posição atual do robô
-            self.robo.coletar_lixo('orgânico')
-            self.robo.coletar_lixo('reciclável')
-            
-            # Decide a próxima ação do robô aleatoriamente
-            acao = random.choice(['andar', 'largar_lixo'])
-            if acao == 'andar':
-                # Tenta andar para uma direção aleatória
-                direcao = random.choice(list(self.robo.movimentos.keys()))
-                self.robo.andar(direcao)      
-        
-        
+        # Atualiza a matriz com a nova posição do robô
+        matriz[posicao_atual[0]][posicao_atual[1]] = "_"  # Limpa a posição anterior do robô
+        matriz[pos_x_atual][pos_y_atual] = "A"  # Marca a nova posição do robô
 
+        # Imprime a matriz atualizada na tela
+        for i in range(tamanho_matriz):
+            for j in range(tamanho_matriz):
+                print(matriz[i][j], end=" ")
+            print()
+        print("")
+        print(f'levando lixo {tipo_lixo.upper()} para lixeira')
         
+        print()
+        point=pontuacao()
+        print(f'pontuação: {point}') 
         
+        time.sleep(0.1)
+        system("cls")
+
+        # Atualiza a posição atual do robô
+        posicao_atual = (pos_x_atual, pos_y_atual)
+
+    # Após chegar à posição (19, 19) da matriz, chama a função receber_lixo
+    receber_lixo(tipo_lixo)
+    
+    matriz[pos_x_atual][pos_y_atual] = "X"  # Marca a posição atual do robô com outro lixo
+
+    return matriz
