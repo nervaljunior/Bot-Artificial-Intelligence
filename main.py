@@ -8,6 +8,8 @@ from lixeira import *
 if __name__ == "__main__":
     ambiente = gerar_ambiente()
     fim = True
+    print("digite um numero referente aos quatro tipos de agentes\n1-reativo simples\n2-reativo baseado em modelo\n3-agente por objetivo\n4-agente de utilidade")
+    x=input()
     tempo_inicial = time.time()  # Registro do tempo inicial
     while fim:
         imprime(ambiente)

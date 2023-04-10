@@ -43,6 +43,126 @@ def react_simples(matriz):
         matriz[i][j] = "A"
         return matriz
 
+def react_based_models(matriz):
+    # Encontra a posição atual do robô
+    #mantem historicos
+    posicao_lixo=(19,19)
+    posicao_atual = None
+    for i in range(20):
+        for j in range(20):
+            if matriz[i][j] =="A":
+                posicao_atual = (i, j)
+                break
+                
+    i,j=posicao_atual
+    percept(i,j,matriz)
+    i_novo,j_novo=direca(i,j)
+    i+=i_novo
+    j+=j_novo
+    
+    # Move o robô para a nova posição
+    if(posicao_atual==posicao_lixo):
+        matriz[posicao_atual[0]][posicao_atual[1]] = "X"
+        matriz[i][j] = "A"
+        return matriz
+    if(matriz[i][j]=="R" or matriz[i][j]=="O"):  # Correção aqui
+        if matriz[i][j]=='R':
+            lixo='reciclável'
+            print(f'levando lixo {lixo} para lixeira')
+            matriz[i][j] = "_"
+            levar_lixo(lixo,posicao_atual,matriz)
+        elif matriz[i][j]=='O':
+            lixo='orgânico'
+            print(f'levando lixo {lixo} para lixeira')
+            matriz[i][j] = "_"
+            levar_lixo(lixo,posicao_atual,matriz)
+        matriz[posicao_atual[0]][posicao_atual[1]] = "_"
+        matriz[19][18] = "A"
+    else:
+        matriz[posicao_atual[0]][posicao_atual[1]] = "_"
+        matriz[i][j] = "A"
+        return matriz
+
+def based_goals(matriz):
+    # Encontra a posição atual do robô
+    #por objetivos
+    posicao_lixo=(19,19)
+    posicao_atual = None
+    for i in range(20):
+        for j in range(20):
+            if matriz[i][j] =="A":
+                posicao_atual = (i, j)
+                break
+                
+    i,j=posicao_atual
+    percept(i,j,matriz)
+    i_novo,j_novo=direca(i,j)
+    i+=i_novo
+    j+=j_novo
+    
+    # Move o robô para a nova posição
+    if(posicao_atual==posicao_lixo):
+        matriz[posicao_atual[0]][posicao_atual[1]] = "X"
+        matriz[i][j] = "A"
+        return matriz
+    if(matriz[i][j]=="R" or matriz[i][j]=="O"):  # Correção aqui
+        if matriz[i][j]=='R':
+            lixo='reciclável'
+            print(f'levando lixo {lixo} para lixeira')
+            matriz[i][j] = "_"
+            levar_lixo(lixo,posicao_atual,matriz)
+        elif matriz[i][j]=='O':
+            lixo='orgânico'
+            print(f'levando lixo {lixo} para lixeira')
+            matriz[i][j] = "_"
+            levar_lixo(lixo,posicao_atual,matriz)
+        matriz[posicao_atual[0]][posicao_atual[1]] = "_"
+        matriz[19][18] = "A"
+    else:
+        matriz[posicao_atual[0]][posicao_atual[1]] = "_"
+        matriz[i][j] = "A"
+        return matriz
+
+def based_utility(matriz):
+    #baseado em utilidades tem felicidade, ou seja, ele liga para pontuação 
+    # Encontra a posição atual do robô
+    posicao_lixo=(19,19)
+    posicao_atual = None
+    for i in range(20):
+        for j in range(20):
+            if matriz[i][j] =="A":
+                posicao_atual = (i, j)
+                break
+                
+    i,j=posicao_atual
+    percept(i,j,matriz)
+    i_novo,j_novo=direca(i,j)
+    i+=i_novo
+    j+=j_novo
+    
+    # Move o robô para a nova posição
+    if(posicao_atual==posicao_lixo):
+        matriz[posicao_atual[0]][posicao_atual[1]] = "X"
+        matriz[i][j] = "A"
+        return matriz
+    if(matriz[i][j]=="R" or matriz[i][j]=="O"):  # Correção aqui
+        if matriz[i][j]=='R':
+            lixo='reciclável'
+            print(f'levando lixo {lixo} para lixeira')
+            matriz[i][j] = "_"
+            levar_lixo(lixo,posicao_atual,matriz)
+        elif matriz[i][j]=='O':
+            lixo='orgânico'
+            print(f'levando lixo {lixo} para lixeira')
+            matriz[i][j] = "_"
+            levar_lixo(lixo,posicao_atual,matriz)
+        matriz[posicao_atual[0]][posicao_atual[1]] = "_"
+        matriz[19][18] = "A"
+    else:
+        matriz[posicao_atual[0]][posicao_atual[1]] = "_"
+        matriz[i][j] = "A"
+        return matriz
+
     
 def percept(x, y, matriz):
 # Lista para armazenar as percepções do robô
