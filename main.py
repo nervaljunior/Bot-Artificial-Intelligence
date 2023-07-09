@@ -14,7 +14,7 @@ if __name__ == "__main__":
         imprime(ambiente)
         time.sleep(0)
         system("cls")
-        based_utility(ambiente)
+        react_simples(ambiente)
         fim = verifica_matriz(ambiente)
     tempo_final = time.time()  # Registro do tempo final
     tempo_total = tempo_final - tempo_inicial  # Cálculo do tempo total de execução
