@@ -8,6 +8,7 @@ from lixeira import *
 if __name__ == "__main__":
     ambiente = gerar_ambiente()
     fim = True
+    
     tempo_inicial = time.time()  # Registro do tempo inicial
     while fim:
         imprime(ambiente)
